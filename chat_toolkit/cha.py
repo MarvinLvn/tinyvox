@@ -23,6 +23,14 @@ class CHATFile:
     def add_header(self, key: str, value: str):
         self.headers[key] = value
 
+    @property
+    def languages(self) -> List[str]:
+        languages_str = self.headers.get('Languages', '')
+        return [lang.strip() for lang in languages_str.split(',') if lang.strip()]
+
+    def get_primary_language(self) -> Optional[str]:
+        return self.languages[0] if self.languages else None
+
     def add_participant(self, code: str, name: str, role: str):
         self.participants[code] = {'name': name, 'role': role}
 
