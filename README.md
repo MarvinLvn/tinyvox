@@ -106,11 +106,12 @@ where:
 * (start, end) are indices of the files you want to process in the --paired file.
 * --output is the output folder where .wav (symlink) and .txt (normalized) files will be stored.
 
+This will recreate the corpus structure in `FA_prepared` with the audio file (symbolic link) and the cleaned transcript (new file).
+
 7. Then we can run utterance-level forced alignment:
 
 ```sh  
 python force_align/ctc_align.py \
-  --output_dir=FA_prepared/from_<START>_to_<END>/aligned \
   --data=FA_prepared/from_<START>_to_<END> \
   --model=stt_multilingual_fastconformer_hybrid_large_pc --window_len=8000
 ```

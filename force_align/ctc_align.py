@@ -33,7 +33,6 @@ from nemo.collections.asr.models.ctc_models import EncDecCTCModel
 from nemo.collections.asr.models.hybrid_rnnt_ctc_models import EncDecHybridRNNTCTCModel
 
 parser = argparse.ArgumentParser(description="CTC Segmentation")
-parser.add_argument("--output_dir", default="output", type=str, help="Path to output directory")
 parser.add_argument(
     "--data",
     type=str,
@@ -45,7 +44,7 @@ parser.add_argument(
 parser.add_argument("--window_len", type=int, default=8000, help="Window size for ctc segmentation algorithm")
 parser.add_argument("--sample_rate", type=int, default=16000, help="Sampling rate, Hz")
 parser.add_argument(
-    "--model", type=str, default="QuartzNet15x5Base-En", help="Path to model checkpoint or pre-trained model name",
+    "--model", type=str, default="stt_multilingual_fastconformer_hybrid_large_pc", help="Path to model checkpoint or pre-trained model name",
 )
 parser.add_argument("--debug", action="store_true", help="Flag to enable debugging messages")
 parser.add_argument("--cpu", action="store_true", help="Flag to run on CPU")
@@ -66,8 +65,10 @@ if __name__ == "__main__":
     device = torch.device('cpu') if args.cpu else torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     logger.info(f"Using device: {device}")
 
+    data = Path(args.data)
+
     # setup logger
-    log_dir = os.path.join(args.output_dir, "logs")
+    log_dir = data / 'alignment_logs'
     os.makedirs(log_dir, exist_ok=True)
     log_file = os.path.join(log_dir, f"ctc_segmentation_{args.window_len}.log")
     if os.path.exists(log_file):
@@ -117,9 +118,6 @@ if __name__ == "__main__":
     vocabulary = ["ε"] + list(vocabulary)
     logging.debug(f"ASR Model vocabulary: {vocabulary}")
 
-    data = Path(args.data)
-    output_dir = Path(args.output_dir)
-
     lang_data = {}
     is_multilingual = False
     if hasattr(asr_model, 'tokenizer_cfg') and len(asr_model.tokenizer_cfg['langs']) > 1:
@@ -131,7 +129,7 @@ if __name__ == "__main__":
             lang_data = dict(zip(lang_data['audio_filepath'], lang_data['language']))
 
     if os.path.isdir(data):
-        audio_paths = data.glob("*.wav")
+        audio_paths = data.glob("**/*.wav")
         data_dir = data
     else:
         audio_paths = [Path(data)]
@@ -141,16 +139,15 @@ if __name__ == "__main__":
     all_transcript_file = []
     all_segment_file = []
     all_wav_paths = []
-    segments_dir = os.path.join(args.output_dir, "segments")
-    os.makedirs(segments_dir, exist_ok=True)
+
 
     index_duration = None
+
     for path_audio in audio_paths:
         logging.info(f"Processing {path_audio.name}...")
-        transcript_file = os.path.join(data_dir, path_audio.name.replace(".wav", ".txt"))
-        segment_file = os.path.join(
-            segments_dir, f"{args.window_len}_" + path_audio.name.replace(".wav", "_segments.txt")
-        )
+        transcript_file = path_audio.with_suffix('.txt')
+        segments_dir = path_audio.parent
+        segment_file = path_audio.parent / f'{args.window_len}_{path_audio.name.replace(".wav", "_segments.txt")}'
         if not os.path.exists(transcript_file):
             logging.info(f"{transcript_file} not found. Skipping {path_audio.name}")
             continue

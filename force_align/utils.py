@@ -96,6 +96,7 @@ def get_segments(
         config.char_list = vocabulary
         config.min_window_size = window_size
         config.index_duration = index_duration
+        config.blank_transition_cost_zero = True
 
         if bpe_model:
             ground_truth_mat, utt_begin_indices = _prepare_tokenized_text_for_bpe_model(text, tokenizer, vocabulary, 0, lang)

@@ -48,7 +48,7 @@ def clean_data(matched, cleaned_path, data_path, unknown_token):
     not_valid = []
     data = []
     for idx, row in tqdm(matched.iterrows()):
-        transcript, audio = Path(row['transcript']), Path(row['audio'])
+        transcript, audio, corpus = Path(row['transcript']), Path(row['audio']), row['corpus']
         transcript = Path(str(transcript.parent).replace(str(data_path), str(cleaned_path))) / (transcript.stem + '_cleaned.cha')
         audio = Path(str(audio.parent).replace(str(data_path), str(cleaned_path))) / audio.name
         cha_data = parse_chat_file(transcript)
@@ -59,7 +59,8 @@ def clean_data(matched, cleaned_path, data_path, unknown_token):
                 {
                     "audio_filepath": str(audio),
                     "text": clean_content(content, unknown_token),
-                    "language": reason
+                    "language": reason,
+                    "corpus": corpus
                 }
             )
         else:
@@ -95,6 +96,7 @@ def normalize_sentences(sentences, language):
     return sentences
 
 def write_utterance(output_file, text, language, vocabulary_symbols):
+    output_file.parent.mkdir(parents=True, exist_ok=True)
     sentences = text.replace('|', '\n')
     # 1) Write file with punctuation
     with open(output_file.parent / (output_file.stem + '_with_punct.txt'), 'w') as fout:
@@ -121,11 +123,20 @@ def write_cleaned_data(data, output, vocabulary_symbols):
 
     for item in data:
         audio_path = Path(item['audio_filepath'])
+        corpus = item['corpus']
         text = item['text']
         language = item['language']
+
+        if corpus not in audio_path.parts:
+            raise ValueError(f"{corpus.name} not found in {audio_path}.\nAborting.")
+
+        start_idx = audio_path.parts.index(corpus)
         # Create audio symlink
-        output_audio = output / audio_path.name
+        # (recreating the corpus structure to avoid skipping files that have the same name but different subpaths)
+        output_audio = output / Path(*audio_path.parts[start_idx:])
+
         if not output_audio.exists():
+            output_audio.parent.mkdir(parents=True, exist_ok=True)
             output_audio.symlink_to(audio_path)
 
         # Write utterances
@@ -201,6 +212,10 @@ def main():
     vocabulary_symbols += [x.upper() for x in vocabulary_symbols]
 
     matched = pd.read_csv(args.paired, sep='\t')
+
+    if matched.isna().any().any():
+        print(matched.head())
+        raise ValueError(f"Can't parsed {args.paired}. Please check all fields are tab separated.")
 
     if (start < 0 or start > matched.shape[0] or
             end < 0 or end > matched.shape[0] or
