@@ -4,6 +4,9 @@ To install the repo and its dependencies, you can run:
 
 ```sh
 conda env create -f env.yml
+conda activate asr
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install ctc_segmentation==1.7.1
 pip install nemo_toolkit['all']
 pip install -e .
 ```
