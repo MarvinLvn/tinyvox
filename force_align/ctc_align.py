@@ -20,7 +20,7 @@ import os
 import sys
 import time
 from pathlib import Path
-
+import psutil
 import numpy as np
 import scipy.io.wavfile as wav
 import torch
@@ -31,6 +31,10 @@ import pandas as pd
 import nemo.collections.asr as nemo_asr
 from nemo.collections.asr.models.ctc_models import EncDecCTCModel
 from nemo.collections.asr.models.hybrid_rnnt_ctc_models import EncDecHybridRNNTCTCModel
+
+def log_memory():
+    process = psutil.Process(os.getpid())
+    logging.info(f"Memory usage: {process.memory_info().rss / 1024 / 1024} MB")
 
 parser = argparse.ArgumentParser(description="CTC Segmentation")
 parser.add_argument(
@@ -86,7 +90,9 @@ if __name__ == "__main__":
     else:
         asr_model = nemo_asr.models.ASRModel.from_pretrained(args.model, strict=False)
 
-    asr_model = asr_model.to(device=device)
+    # Use local attention
+    asr_model.change_attention_model(self_attention_model="rel_pos_local_attn", att_context_size=[64, 64])
+
 
     if not (isinstance(asr_model, EncDecCTCModel) or isinstance(asr_model, EncDecHybridRNNTCTCModel)):
         raise NotImplementedError(
@@ -105,7 +111,12 @@ if __name__ == "__main__":
         tokenizer = None
 
     if isinstance(asr_model, EncDecHybridRNNTCTCModel):
-        asr_model.change_decoding_strategy(decoder_type="ctc")
+        asr_model.change_decoding_strategy(
+            decoder_type="ctc",
+            decoding_cfg={
+                "strategy": "greedy_batch",
+            }
+        )
 
     # extract ASR vocabulary and add blank symbol
     if hasattr(asr_model, 'tokenizer'):  # i.e. tokenization is BPE-based
@@ -129,7 +140,7 @@ if __name__ == "__main__":
             lang_data = dict(zip(lang_data['audio_filepath'], lang_data['language']))
 
     if os.path.isdir(data):
-        audio_paths = data.glob("**/*.wav")
+        audio_paths = list(data.glob("**/*.wav"))
         data_dir = data
     else:
         audio_paths = [Path(data)]
@@ -142,6 +153,9 @@ if __name__ == "__main__":
 
 
     index_duration = None
+    if len(audio_paths) == 0:
+        print(f'No audio found.')
+        exit()
 
     for path_audio in audio_paths:
         logging.info(f"Processing {path_audio.name}...")
@@ -149,6 +163,7 @@ if __name__ == "__main__":
         segments_dir = path_audio.parent
         segment_file = path_audio.parent / f'{args.window_len}_{path_audio.name.replace(".wav", "_segments.txt")}'
         if not os.path.exists(transcript_file):
+            logging.info(f"{transcript_file} not found. Skipping {path_audio.name}")
             logging.info(f"{transcript_file} not found. Skipping {path_audio.name}")
             continue
         try:
@@ -164,6 +179,7 @@ if __name__ == "__main__":
             original_duration = len(signal) / sample_rate
             logging.debug(f"len(signal): {len(signal)}, sr: {sample_rate}")
             logging.debug(f"Duration: {original_duration}s, file_name: {path_audio}")
+
 
             hypotheses = asr_model.transcribe([str(path_audio)], batch_size=1, return_hypotheses=True)
 
