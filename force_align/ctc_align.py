@@ -20,7 +20,7 @@ import os
 import sys
 import time
 from pathlib import Path
-
+import psutil
 import numpy as np
 import scipy.io.wavfile as wav
 import torch
@@ -31,6 +31,22 @@ import pandas as pd
 import nemo.collections.asr as nemo_asr
 from nemo.collections.asr.models.ctc_models import EncDecCTCModel
 from nemo.collections.asr.models.hybrid_rnnt_ctc_models import EncDecHybridRNNTCTCModel
+
+MAX_DUR = 3600 # in seconds
+def transcribe_chunks(asr_model, signal, sample_rate, chunk_size_seconds=MAX_DUR):
+    chunk_size = chunk_size_seconds * sample_rate
+    chunks = [signal[i:i + chunk_size] for i in range(0, len(signal), chunk_size)]
+
+    all_alignments = []
+    print(f"Found {len(chunks)} of {MAX_DUR} seconds.")
+    for chunk in chunks:
+        chunk_hypotheses = asr_model.transcribe([chunk], batch_size=1, return_hypotheses=True)
+        chunk_log_probs = chunk_hypotheses[0][0].alignments
+        blank_col = chunk_log_probs[:, -1].reshape((chunk_log_probs.shape[0], 1))
+        chunk_log_probs = np.concatenate((blank_col, chunk_log_probs[:, :-1]), axis=1)
+        all_alignments.append(chunk_log_probs)
+
+    return np.concatenate(all_alignments)
 
 parser = argparse.ArgumentParser(description="CTC Segmentation")
 parser.add_argument(
@@ -86,6 +102,8 @@ if __name__ == "__main__":
     else:
         asr_model = nemo_asr.models.ASRModel.from_pretrained(args.model, strict=False)
 
+    # Use local attention
+    asr_model.change_attention_model(self_attention_model="rel_pos_local_attn", att_context_size=[64, 64])
     asr_model = asr_model.to(device=device)
 
     if not (isinstance(asr_model, EncDecCTCModel) or isinstance(asr_model, EncDecHybridRNNTCTCModel)):
@@ -105,7 +123,12 @@ if __name__ == "__main__":
         tokenizer = None
 
     if isinstance(asr_model, EncDecHybridRNNTCTCModel):
-        asr_model.change_decoding_strategy(decoder_type="ctc")
+        asr_model.change_decoding_strategy(
+            decoder_type="ctc",
+            decoding_cfg={
+                "strategy": "greedy_batch",
+            }
+        )
 
     # extract ASR vocabulary and add blank symbol
     if hasattr(asr_model, 'tokenizer'):  # i.e. tokenization is BPE-based
@@ -129,7 +152,7 @@ if __name__ == "__main__":
             lang_data = dict(zip(lang_data['audio_filepath'], lang_data['language']))
 
     if os.path.isdir(data):
-        audio_paths = data.glob("**/*.wav")
+        audio_paths = list(data.glob("**/*.wav"))
         data_dir = data
     else:
         audio_paths = [Path(data)]
@@ -142,6 +165,9 @@ if __name__ == "__main__":
 
 
     index_duration = None
+    if len(audio_paths) == 0:
+        print(f'No audio found.')
+        exit()
 
     for path_audio in audio_paths:
         logging.info(f"Processing {path_audio.name}...")
@@ -153,6 +179,8 @@ if __name__ == "__main__":
             continue
         try:
             sample_rate, signal = wav.read(path_audio)
+            signal = signal.astype(np.float32) / np.iinfo(signal.dtype).max
+
             if len(signal) == 0:
                 logging.error(f"Skipping {path_audio.name}")
                 continue
@@ -165,14 +193,7 @@ if __name__ == "__main__":
             logging.debug(f"len(signal): {len(signal)}, sr: {sample_rate}")
             logging.debug(f"Duration: {original_duration}s, file_name: {path_audio}")
 
-            hypotheses = asr_model.transcribe([str(path_audio)], batch_size=1, return_hypotheses=True)
-
-            # if hypotheses form a tuple (from Hybrid model), extract just "best" hypothesis
-            if type(hypotheses) == tuple and len(hypotheses) == 2:
-                hypotheses = hypotheses[0]
-            log_probs = hypotheses[
-                0
-            ].alignments  # note: "[0]" is for batch dimension unpacking (and here batch size=1)
+            log_probs = transcribe_chunks(asr_model, signal, sample_rate)
 
             # move blank values to the first column (ctc-package compatibility)
             blank_col = log_probs[:, -1].reshape((log_probs.shape[0], 1))
