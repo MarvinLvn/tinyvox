@@ -223,9 +223,12 @@ def main():
         raise ValueError("Start should be smaller than end and both should be between 0 and matched.shape[0].")
     matched = matched[start:end]
     data, not_valid = clean_data(matched, args.cleaned, args.data, args.unknown_token)
-    write_cleaned_data(data, args.output, vocabulary_symbols)
+    print(f"Data len = {len(data)}")
+    print(f"Not valid len = {len(not_valid)}")
     write_not_valid(not_valid, args.output)
-    write_languages(data, args.output)
+    if len(data) != 0:
+        write_cleaned_data(data, args.output, vocabulary_symbols)
+        write_languages(data, args.output)
 
 if __name__ == "__main__":
     main()

@@ -38,7 +38,7 @@ def transcribe_chunks(asr_model, signal, sample_rate, chunk_size_seconds=MAX_DUR
     chunks = [signal[i:i + chunk_size] for i in range(0, len(signal), chunk_size)]
 
     all_alignments = []
-    print(f"Found {len(chunks)} of {MAX_DUR} seconds.")
+    print(f"Found {len(chunks)} chunks of {MAX_DUR} seconds.")
     for chunk in chunks:
         chunk_hypotheses = asr_model.transcribe([chunk], batch_size=1, return_hypotheses=True)
         chunk_log_probs = chunk_hypotheses[0][0].alignments
