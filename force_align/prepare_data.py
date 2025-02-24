@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 import re
 from pathlib import Path
 
@@ -225,10 +226,13 @@ def main():
     data, not_valid = clean_data(matched, args.cleaned, args.data, args.unknown_token)
     print(f"Data len = {len(data)}")
     print(f"Not valid len = {len(not_valid)}")
-    write_not_valid(not_valid, args.output)
-    if len(data) != 0:
+    if len(data) == 0:
+        print("No valid data to process. Exiting with error code 1.")
+        sys.exit(1)  # Exit with non-zero code to indicate an error condition
+    else:
         write_cleaned_data(data, args.output, vocabulary_symbols)
         write_languages(data, args.output)
+        sys.exit(0)  # Explicitly exit with success code
 
 if __name__ == "__main__":
     main()
