@@ -25,7 +25,7 @@ export TMPDIR=$WORK # For NeMo to load model where there's space
 
 cd ${WORK_DIR}
 # 1) Prepare data
-echo python force_align/prepare_data.py --paired $MATCHED_PATH \
+python force_align/prepare_data.py --paired $MATCHED_PATH \
   --cleaned $CLEANED_PATH \
   --data $ORIGINAL_PATH \
   --start $START --end $END \
@@ -33,6 +33,6 @@ echo python force_align/prepare_data.py --paired $MATCHED_PATH \
 
 
 # 2) Run force alignment
-echo python force_align/ctc_align.py --data ${OUTPUT_PATH}/from_${START}_to_${END} \
+python force_align/ctc_align.py --data ${OUTPUT_PATH}/from_${START}_to_${END} \
   --model=stt_multilingual_fastconformer_hybrid_large_pc \
   --window_len=8000 --gpu
