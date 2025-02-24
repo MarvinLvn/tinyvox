@@ -136,9 +136,10 @@ def write_cleaned_data(data, output, vocabulary_symbols):
         # (recreating the corpus structure to avoid skipping files that have the same name but different subpaths)
         output_audio = output / Path(*audio_path.parts[start_idx:])
 
-        if not output_audio.exists():
-            output_audio.parent.mkdir(parents=True, exist_ok=True)
-            output_audio.symlink_to(audio_path)
+        output_audio.parent.mkdir(parents=True, exist_ok=True)
+        if output_audio.exists() or output_audio.is_symlink():
+            output_audio.unlink()
+        output_audio.symlink_to(audio_path)
 
         # Write utterances
         write_utterance(output_audio.with_suffix('.txt'), text, language, vocabulary_symbols)
