@@ -227,7 +227,7 @@ def main():
     print(f"Data len = {len(data)}")
     print(f"Not valid len = {len(not_valid)}")
     if len(data) == 0:
-        print("No valid data to process. Exiting with error code 1.")
+        print("No valid data to process. Exiting with error code 2.")
         sys.exit(2)  # Exit with 2 to indicate no valid data found
     else:
         write_cleaned_data(data, args.output, vocabulary_symbols)
