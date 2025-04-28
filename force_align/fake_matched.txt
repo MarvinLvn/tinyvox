@@ -1,0 +1,5 @@
+transcript	audio	corpus
+/home/engaclew/DATA/ForcedAlignmentTest/VanDam-5minute/5mn.cha	/home/engaclew/DATA/ForcedAlignmentTest/VanDam-5minute/5mn.wav	VanDam-5minute
+/home/engaclew/DATA/ForcedAlignmentTest/VanDam-5minute/5mn_little_speech.cha	/home/engaclew/DATA/ForcedAlignmentTest/VanDam-5minute/5mn_little_speech.wav	VanDam-5minute
+/home/engaclew/DATA/ForcedAlignmentTest/Thomas/1h.cha	/home/engaclew/DATA/ForcedAlignmentTest/Thomas/1h.wav	Thomas
+/home/engaclew/DATA/ForcedAlignmentTest/VanDam-Daylong/14h.cha	/home/engaclew/DATA/ForcedAlignmentTest/VanDam-Daylong/14h.wav	VanDam-Daylong
