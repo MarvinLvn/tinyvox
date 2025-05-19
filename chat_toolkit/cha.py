@@ -30,6 +30,7 @@ class CHATFile:
         self.group: str = None
         self.missing_timestamps = 0
         self.is_automatic = False
+        self.found_tiers = set()
         self.automatic_keywords = {'LENA', 'Batchalign', 'ASR', 'This is a dummy file'}
 
     def add_header(self, key: str, value: str):
@@ -64,6 +65,7 @@ class CHATFile:
     @property
     def languages(self) -> List[str]:
         return self._languages
+
     def get_primary_language(self) -> Optional[str]:
         return self.languages[0] if self.languages else None
 

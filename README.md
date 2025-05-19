@@ -48,4 +48,12 @@ This will create a .csv file in `data_logs/original_pairs.csv` with the created 
 python create_pairs.py
 ```
 
+4. You can run `analysis/data_quantity.ipynb` to extract phonetically-transcribed utterances of the target child into the `phonetically_transcribed_pairs/utterances.csv` file.
 
+5. To map the input phonetic inventory to the target inventory (`ipa/mapping.py`) and remove empty utterances, you can use: 
+
+```shell
+python simplify_phones.py --data phonetically_transcribed_pairs/utterances.csv
+```
+
+This will create a file `phonetically_transcribed_pairs/utterances2.csv`

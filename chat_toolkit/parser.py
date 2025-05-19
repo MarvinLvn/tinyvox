@@ -27,6 +27,7 @@ class CHATParser:
         self.current_tier_type = None
         self.pending_header = None
         self.found_headers = set()
+        self.found_tiers = set()
         self.line_number = 0
 
     def _get_line_type(self, line: str) -> LineType:
@@ -56,7 +57,8 @@ class CHATParser:
                 self._parse_header(self.pending_header)
             if self.current_utterance:
                 self.chat_file.add_utterance(self.current_utterance)
-
+            if len(self.found_tiers) > 0:
+                self.chat_file.found_tiers = self.found_tiers
             self._validate_parse()
             return self.chat_file
 
@@ -129,6 +131,7 @@ class CHATParser:
         tier_type, content = self._parse_dependent_tier(line)
         self.current_tier_type = tier_type
         self.current_utterance.add_dependent_tier(tier_type, content)
+        self.found_tiers.add(tier_type)
 
     def _handle_continuation(self, line: str) -> None:
         """Handle continuation lines for both utterances and dependent tiers."""
