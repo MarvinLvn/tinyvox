@@ -53,7 +53,13 @@ python create_pairs.py
 5. To map the input phonetic inventory to the target inventory (`ipa/mapping.py`) and remove empty utterances, you can use: 
 
 ```shell
-python simplify_phones.py --data phonetically_transcribed_pairs/utterances.csv
+python data_preparation/simplify_phones.py --data phonetically_transcribed_pairs/utterances.csv
 ```
 
 This will create a file `phonetically_transcribed_pairs/utterances2.csv`
+
+6. Extract KCHI segments into individual files using:
+
+```shell
+python data_preparation/extract_segments.py --data phonetically_transcribed_pairs/utterances2.csv --out /path/to/TinyVox
+```
