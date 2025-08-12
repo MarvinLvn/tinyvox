@@ -70,12 +70,12 @@ def simplify_phones(phones, ft, simplifier):
     word_list = [ft.ipa_segs(word) for word in word_list]
     # Simplify
     word_list = [
-        ''.join([
+        ' '.join([
             simplifier[phone] for phone in word
         ])
         for word in word_list
     ]
-    return ' '.join(word_list)
+    return ' | '.join(word_list) + ' |' # Add final | since it marks word/breathing pattern boundaries
 
 def main():
     parser = argparse.ArgumentParser(
@@ -124,8 +124,8 @@ def main():
     aft_len = len(data.audio_path.unique())
     assert bef_len - aft_len == len(forbidden_files)
 
-    # 6) Remove utterances > 30sec
-    data = data[data['duration'] < 30000]
+    # 6) Remove utterances > 10sec
+    data = data[data['duration'] < 10000]
 
     # 7) Remove utterances < .05sec (50ms)
     data = data[data['duration'] > 50]

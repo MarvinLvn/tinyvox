@@ -63,3 +63,9 @@ This will create a file `phonetically_transcribed_pairs/utterances2.csv`
 ```shell
 python data_preparation/extract_segments.py --data phonetically_transcribed_pairs/utterances2.csv --out /path/to/TinyVox
 ```
+
+7. Create phonetic vocabulary:
+
+```shell
+python data_preparation/create_inventory.py --path /path/to/TinyVox
+```
