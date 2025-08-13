@@ -185,9 +185,9 @@ async def download_file(session, url, target_path, cookie, logger, max_retries=5
 
 async def main():
     if len(sys.argv) < 4 or len(sys.argv) > 5:
-        print("Usage: ./crawler.py email password database [corpus]")
+        print("Usage: ./talkbank_audio_scrapper.py email password database [corpus]")
         print("database can be: homebank, childes, or phon")
-        print("Example: ./crawler.py user@example.com password phon Providence")
+        print("Example: ./talkbank_audio_scrapper.py user@example.com password phon Providence")
         print("If no corpus is specified, will download everything from the database")
         sys.exit(1)
 

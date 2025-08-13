@@ -4,7 +4,7 @@ To install the repo and its dependencies, you can run:
 
 ```sh
 conda env create -f env.yml
-conda activate phorec
+conda activate tinyvox
 ```
 
 # Data preparation 
@@ -37,7 +37,6 @@ following the same structure. Unzip and keep .zip files as we'll need them for s
 2. Remove .mp3 for which there's already a .wav and convert everything to single-channel 16 kHz. Don't forget to change the data path in the two scripts above. 
 
 ```shell
-./clean_duplicates.sh
 python convert_audio.py
 ```
 
