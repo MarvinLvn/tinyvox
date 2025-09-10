@@ -62,18 +62,21 @@ forbidden_files = ['/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora
 def simplify_phones(phones, ft, simplifier):
     if pd.isna(phones):
         return ''
+
     # Remove successive white spaces
     phones = ' '.join(phones.split())
     # Split according to white space (words/breathing patterns)
     word_list = phones.split(' ')
+
     # Segment into IPA
     word_list = [ft.ipa_segs(word) for word in word_list]
+
     # Simplify
     word_list = [
         ' '.join([
             simplifier[phone] for phone in word
         ])
-        for word in word_list
+        for word in word_list if len(word) > 0
     ]
     return ' | '.join(word_list) + ' |' # Add final | since it marks word/breathing pattern boundaries
 
@@ -101,7 +104,8 @@ def main():
     original_duration = data['duration'].sum() / (1000*60*60)
 
     # 1) Remove forbidden characters
-    data = data[data['phones'].notna() & (data['phones'] != '')]
+    data['phones'] = data['phones'].str.replace(r'\s+', ' ', regex=True)
+    data = data[(data['phones'].notna()) & (data['phones'] != '') & (data['phones'] != ' ')]
     pattern = '|'.join(map(re.escape, forbidden_characters))
     data = data[~data['phones'].str.contains(pattern, regex=True)]
 

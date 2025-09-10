@@ -5,6 +5,7 @@ To install the repo and its dependencies, you can run:
 ```sh
 conda env create -f env.yml
 conda activate tinyvox
+pip install -e .
 ```
 
 # Data preparation 
@@ -13,6 +14,11 @@ conda activate tinyvox
 
 1. Download all audio files and transcript files from [CHILDES](https://childes.talkbank.org/), [HomeBank](https://homebank.talkbank.org/), [PhonBank](https://phon.talkbank.org/),
 following the same structure. Unzip and keep .zip files as we'll need them for step 3.
+
+To unzip you can use this bash command:
+```shell
+find /path/to/data -name "*.zip" -type f -execdir unzip -o {} \;
+```
 
 ```shell
 ├── childes
@@ -44,7 +50,7 @@ python convert_audio.py
 This will create a .csv file in `data_logs/original_pairs.csv` with the created pairs.
 
 ```shell
-python create_pairs.py
+python create_pairs.py --data_path /path/to/data --required_tiers pho xpho
 ```
 
 4. You can run `analysis/data_quantity.ipynb` to extract phonetically-transcribed utterances of the target child into the `phonetically_transcribed_pairs/utterances.csv` file.
@@ -60,7 +66,7 @@ This will create a file `phonetically_transcribed_pairs/utterances2.csv`
 6. Extract KCHI segments into individual files using:
 
 ```shell
-python data_preparation/extract_segments.py --data phonetically_transcribed_pairs/utterances2.csv --out /path/to/TinyVox
+python data_preparation/extract_segments.py --data phonetically_transcribed_pairs/utterances2.csv --out /path/to/TinyVox --rttm_folder ../voice_type_classifier/output_voice_type_classifier/TinyVox_rttm
 ```
 
 7. Create phonetic vocabulary:

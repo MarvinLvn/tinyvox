@@ -18,8 +18,11 @@ def extract_audio_chunk(recording_path, onset, offset, output_path):
            sample_rate = audio_file.samplerate
            start_sample = int((start_ms / 1000) * sample_rate)
            end_sample = int((end_ms / 1000) * sample_rate)
-           n_samples = end_sample - start_sample
 
+           if start_sample >= len(audio_file) or end_sample > len(audio_file):
+               return 1
+
+           n_samples = end_sample - start_sample
            # Seek to the start position and read only the chunk we need
            audio_file.seek(start_sample)
            chunk = audio_file.read(n_samples)

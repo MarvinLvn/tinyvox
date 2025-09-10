@@ -268,6 +268,8 @@ forbidden_characters = {
     'X',
     'C',
     'V',
+    'G',
+    'S',
     'xx',
     '*'
 }
