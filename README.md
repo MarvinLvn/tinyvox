@@ -90,7 +90,7 @@ python data_preparation/extract_segments.py --data phonetically_transcribed_pair
 python data_preparation/create_inventory.py --path /path/to/TinyVox
 ```
 
-9. Move original audio files to tinyvox:
+9. Copy original audio files to tinyvox:
 
 ```shell
 python data_preparation/copy_original_files.py --data TinyVox
