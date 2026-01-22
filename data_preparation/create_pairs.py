@@ -5,7 +5,7 @@ import argparse
 from chat_toolkit.parser import parse_chat_file
 
 # Example call to extract pairs of (.wav, .cha) that have been phonetically transcribed
-# python data_preparation/create_pairs.py --data_path /scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora --output_dir phonetically_transcribed_pairs --required_tiers pho xARPABE xpho
+# python data_preparation/create_pairs.py --data_path /scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora --output_dir phonetically_transcribed_pairs --required_tiers pho xwb xpho
 
 def match_files(data_path, required_tiers=None):
     print("Parsing CHAT files.")

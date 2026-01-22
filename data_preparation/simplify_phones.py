@@ -57,7 +57,12 @@ forbidden_files = ['/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora
                    '/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora/phon/French/KernFrench/Jules/011103.wav',
                    '/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora/phon/French/KernFrench/Jules/011116.wav',
                    '/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora/phon/French/KernFrench/Jules/020000.wav',
-                   '/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora/phon/French/KernFrench/Jules/020029.wav']
+                   '/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora/phon/French/KernFrench/Jules/020029.wav',
+                   '/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora/phon/French/Lyon/Theotime/11019a.wav',
+                   '/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora/phon/French/Lyon/Theotime/20027a.wav',
+                   '/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora/phon/French/Lyon/Theotime/20027b.wav',
+                   '/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora/phon/Romance/Portuguese/Ramalho/2-3/A23.wav',
+                   '/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora/phon/Biling/ChildL2/040026.wav']
 
 def simplify_phones(phones, ft, simplifier):
     if pd.isna(phones):

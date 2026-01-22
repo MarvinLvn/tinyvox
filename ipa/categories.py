@@ -40,7 +40,6 @@ english_vowels = {
     'æ',  # cat, bad
     'a',  # broader symbol for open vowels
     'ɑ',  # father, palm
-    'ɒ',  # hot, pot (British)
     'ɔ',  # caught, law
     'o',  # go (used in some systems instead of oʊ)
     'ʊ',  # put, good
@@ -85,7 +84,6 @@ german_consonants = {
 german_vowels = {
     # Short vowels
     'ɪ',  # Bitte, Kind
-    'ʏ',  # Hütte, Mütter
     'ɛ',  # Bett, Männer
     'œ',  # Hölle, Götter
     'a',  # Mann, Klasse

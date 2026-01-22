@@ -4,16 +4,19 @@ import logging
 from pathlib import Path
 from tqdm import tqdm
 import soundfile as sf
+import argparse
+
 
 def setup_logging():
-   logging.basicConfig(
-       level=logging.INFO,
-       format='%(asctime)s - %(levelname)s - %(message)s',
-       handlers=[
-           logging.FileHandler('audio_conversion.log'),
-           logging.StreamHandler()
-       ]
-   )
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler('audio_conversion.log'),
+            logging.StreamHandler()
+        ]
+    )
+
 
 def check_audio_specs(file_path):
     """Check if audio file meets our specifications using soundfile."""
@@ -23,6 +26,7 @@ def check_audio_specs(file_path):
     except Exception as e:
         logging.error(f"Error checking {file_path}: {str(e)}")
         return False
+
 
 def convert_audio_files(input_dir):
     setup_logging()
@@ -77,8 +81,12 @@ def convert_audio_files(input_dir):
         return False
     return True
 
+
 if __name__ == "__main__":
-   input_dir = "/scratch1/data/raw_data/CLEAR_ASR/IN_PREP/downloaded_corpora"
-   success = convert_audio_files(input_dir)
-   if not success:
-       exit(1)
+    parser = argparse.ArgumentParser(description='Convert audio files to 16kHz mono WAV format')
+    parser.add_argument('input_dir', type=str, help='Input directory containing audio files')
+    args = parser.parse_args()
+
+    success = convert_audio_files(args.input_dir)
+    if not success:
+        exit(1)
