@@ -1,8 +1,10 @@
-# 0) Downloading TinyVox
+TinyVox is a large-scale, cross-linguistic corpus of over half a million IPA-transcribed child vocalizations, curated from [PhonBank](https://talkbank.org/phon/). It covers five languages (English, French, Portuguese, German, and Spanish) and includes recordings from 560 children aged 6 months to 8 years across 31 source corpora. TinyVox standardizes heterogeneous phonetic annotations into a unified 57-phoneme inventory and provides ready-to-use train/validation/test splits designed for training and evaluating automatic phoneme recognition systems on child speech. It was introduced alongside [BabAR](https://github.com/MarvinLvn/BabAR), a phoneme recognition system for young children's speech.
+
+## 0) Downloading TinyVox
 
 Work in progress.
 
-# 1) Installation
+## 1) Installation
 
 To install the repo and its dependencies, you can run:
 
@@ -12,7 +14,7 @@ conda activate tinyvox
 pip install -e .
 ```
 
-# 2) Data preparation 
+## 2) Data preparation 
 
 If you want to rebuild TinyVox from scratch, you can followed these steps.
 
@@ -100,4 +102,18 @@ python data_preparation/create_inventory.py --path /path/to/TinyVox
 
 ```shell
 python data_preparation/copy_original_files.py --data TinyVox
+```
+
+## References
+
+```bibtex
+@misc{babar,
+      title={BabAR: from phoneme recognition to developmental measures of young children's speech production}, 
+      author={Marvin Lavechin and Elika Bergelson and Roger Levy},
+      year={2026},
+      eprint={2603.05213},
+      archivePrefix={arXiv},
+      primaryClass={eess.AS},
+      url={https://arxiv.org/abs/2603.05213}, 
+}
 ```
