@@ -18,8 +18,6 @@ pip install -e .
 
 If you want to rebuild TinyVox from scratch, you can followed these steps.
 
-## A) Download audio along with their transcript
-
 1. Download all audio files and transcript files from [PhonBank](https://phon.talkbank.org/), following the same structure. 
 
 You can use our helper script (which should hopefully work if nothing has changed on the PhonBank side):
