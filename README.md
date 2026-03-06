@@ -1,4 +1,8 @@
-# Installation
+# 0) Downloading TinyVox
+
+Work in progress.
+
+# 1) Installation
 
 To install the repo and its dependencies, you can run:
 
@@ -8,7 +12,9 @@ conda activate tinyvox
 pip install -e .
 ```
 
-# Data preparation 
+# 2) Data preparation 
+
+If you want to rebuild TinyVox from scratch, you can followed these steps.
 
 ## A) Download audio along with their transcript
 
