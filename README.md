@@ -2,7 +2,35 @@ TinyVox is a large-scale, cross-linguistic corpus of over half a million IPA-tra
 
 ## 0) Downloading TinyVox
 
-Work in progress.
+TinyVox can be downloaded here: [https://talkbank.org/phon/access/Derived/TinyVox.html](https://talkbank.org/phon/access/Derived/TinyVox.html).
+
+```
+├── audio/
+├── metadata.csv
+├── train.csv
+├── val.csv
+└── test.csv
+```
+
+The `audio` folder contains children's speech utterances (.wav files) extracted from manually-annotated boundaries.
+
+`metadata.csv` contains various information about these utterances, including:
+- `audio_filename` the name of the .wav file containing the utterance in the `audio` folder 
+- `original_audio_path` the path of the original audio file (from which `audio_filename` has been extracted); if you want to redownload the original audio file
+- `original_transcript_path` the path of the original transcript file (.cha); if you want to redownload the original annnotation file 
+- `language` the language spoken by the child
+- `gender` the gender of the child
+- `file_activity` the type of activity that is being recorded (e.g., toyplay or picture naming)
+- `age_months` the age of the child in months
+- `phones` the manual transcription (after normalization)
+- `sentence` the orthographic transcript (not always available, not used in the paper)
+- `child_pseudoid` which child has been recorded (inferred pseudo-id from metadata) 
+- `onset` the onset of the utterance (in ms) in the original file (if you want to re-extract the utterance)
+- `offset` the offset of the utterance (in ms) in the original file (if you want to re-extract the utterance)
+
+`{train,val,test}.csv` contains essentially the same information with the split we used to train BabAR. 
+
+If you want to re-create TinyVox from scratch, you can follow these instructions:
 
 ## 1) Installation
 
