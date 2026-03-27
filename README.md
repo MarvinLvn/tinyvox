@@ -22,8 +22,8 @@ The `audio` folder contains children's speech utterances (.wav files) extracted 
 - `gender` the gender of the child
 - `file_activity` the type of activity that is being recorded (e.g., toyplay or picture naming)
 - `age_months` the age of the child in months
-- `phones` the manual transcription (after normalization)
-- `sentence` the orthographic transcript (not always available, not used in the paper)
+- `phones` the manual transcription for that utterance (after normalization)
+- `sentence` the orthographic transcript for that utterance (not always available, not used in the paper)
 - `child_pseudoid` which child has been recorded (inferred pseudo-id from metadata) 
 - `onset` the onset of the utterance (in ms) in the original file (if you want to re-extract the utterance)
 - `offset` the offset of the utterance (in ms) in the original file (if you want to re-extract the utterance)
