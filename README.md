@@ -6,13 +6,16 @@ TinyVox can be downloaded here: [https://talkbank.org/phon/access/Derived/TinyVo
 
 ```
 ├── audio/
+├── original/
 ├── metadata.csv
 ├── train.csv
 ├── val.csv
 └── test.csv
 ```
 
-The `audio` folder contains children's speech utterances (.wav files) extracted from manually-annotated boundaries.
+The `audio` folder contains children's speech utterances (.wav files) extracted from manually-annotated boundaries (useful if you want to listen to the utterances).
+
+The `original` folder is **NOT** included in the TinyVox .zip file as it was too big (226 GB), it contains the raw audio downloaded from TalkBank. You'll need it if you want to retrain BabAR, or if you want to use contextual information as we did in the paper. It can be downloaded from this [link](https://cognitive-ml.fr/downloads/tinyVox.original.tar.gz).
 
 `metadata.csv` contains various information about these utterances, including:
 - `audio_filename` the name of the .wav file containing the utterance in the `audio` folder 
@@ -30,7 +33,7 @@ The `audio` folder contains children's speech utterances (.wav files) extracted 
 
 `{train,val,test}.csv` contains essentially the same information with the split we used to train BabAR. 
 
-If you want to re-create TinyVox from scratch, you can follow these instructions:
+Note that you should have access to everything you need from the instructions above. However, if you want to re-create TinyVox from scratch, you can follow these instructions. 
 
 ## 1) Installation
 
