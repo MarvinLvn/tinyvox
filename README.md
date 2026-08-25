@@ -15,7 +15,7 @@ TinyVox can be downloaded here: [https://talkbank.org/phon/access/Derived/TinyVo
 
 The `audio` folder contains children's speech utterances (.wav files) extracted from manually-annotated boundaries (useful if you want to listen to the utterances).
 
-The `original` folder is **NOT** included in the TinyVox .zip file as it was too big (226 GB), it contains the raw audio downloaded from TalkBank. You'll need it if you want to retrain BabAR, or if you want to use contextual information as we did in the paper. It can be downloaded from this [link](https://cognitive-ml.fr/downloads/tinyVox.original.tar.gz).
+The `original` folder is **NOT** included in the TinyVox .zip file as it was too big (179 GB), it contains the raw audio downloaded from TalkBank. You'll need it if you want to retrain BabAR, or if you want to use contextual information as we did in the paper. It can be downloaded from this [link](https://cognitive-ml.fr/downloads/tinyVox.original.tar.gz).
 
 `metadata.csv` contains various information about these utterances, including:
 - `audio_filename` the name of the .wav file containing the utterance in the `audio` folder 
