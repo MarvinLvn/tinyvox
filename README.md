@@ -1,6 +1,20 @@
 TinyVox is a large-scale, cross-linguistic corpus of over half a million IPA-transcribed child vocalizations, curated from [PhonBank](https://talkbank.org/phon/). It covers five languages (English, French, Portuguese, German, and Spanish) and includes recordings from 560 children aged 6 months to 8 years across 31 source corpora. TinyVox standardizes heterogeneous phonetic annotations into a unified 57-phoneme inventory and provides ready-to-use train/validation/test splits designed for training and evaluating automatic phoneme recognition systems on child speech. It was introduced alongside [BabAR](https://github.com/MarvinLvn/BabAR), a phoneme recognition system for young children's speech.
+ 
+---
 
-## 0) Downloading TinyVox
+## License and usage restrictions
+ 
+TinyVox is derived from data hosted on [PhonBank](https://talkbank.org/phon/), part of the TalkBank system. It is therefore subject to TalkBank's [Ground Rules](https://talkbank.org/0share/rules.html) and distributed under **[CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/)**.
+ 
+In practice, this means:
+- TinyVox can be used for academic research, teaching, and non-commercial development.
+- TinyVox **cannot** be used in commercial products or services. This includes training or fine-tuning models (e.g. LLMs, ASR systems) that will be deployed commercially.
+- Any redistribution or adaptation of TinyVox must remain under the same license (ShareAlike) and retain attribution.
+
+ 
+---
+
+## Quickstart
 
 TinyVox can be downloaded here: [https://talkbank.org/phon/access/Derived/TinyVox.html](https://talkbank.org/phon/access/Derived/TinyVox.html).
 
@@ -13,125 +27,30 @@ TinyVox can be downloaded here: [https://talkbank.org/phon/access/Derived/TinyVo
 └── test.csv
 ```
 
-The `audio` folder contains children's speech utterances (.wav files) extracted from manually-annotated boundaries (useful if you want to listen to the utterances).
-
-The `original` folder is **NOT** included in the TinyVox .zip file as it was too big (179 GB), it contains the raw audio downloaded from TalkBank. You'll need it if you want to retrain BabAR, or if you want to use contextual information as we did in the paper. It can be downloaded from this [link](https://cognitive-ml.fr/downloads/tinyVox.original.tar.gz).
-
-`metadata.csv` contains various information about these utterances, including:
-- `audio_filename` the name of the .wav file containing the utterance in the `audio` folder 
-- `original_audio_path` the path of the original audio file (from which `audio_filename` has been extracted); if you want to redownload the original audio file
-- `original_transcript_path` the path of the original transcript file (.cha); if you want to redownload the original annnotation file 
-- `language` the language spoken by the child
-- `gender` the gender of the child
-- `file_activity` the type of activity that is being recorded (e.g., toyplay or picture naming)
-- `age_months` the age of the child in months
-- `phones` the manual transcription for that utterance (after normalization)
-- `sentence` the orthographic transcript for that utterance (not always available, not used in the paper)
-- `child_pseudoid` which child has been recorded (inferred pseudo-id from metadata) 
-- `onset` the onset of the utterance (in ms) in the original file (if you want to re-extract the utterance)
-- `offset` the offset of the utterance (in ms) in the original file (if you want to re-extract the utterance)
-
-`{train,val,test}.csv` contains essentially the same information with the split we used to train BabAR. 
-
-Note that you should have access to everything you need from the instructions above. However, if you want to re-create TinyVox from scratch, you can follow these instructions. 
-
-## 1) Installation
-
-To install the repo and its dependencies, you can run:
-
-```sh
-conda env create -f env.yml
-conda activate tinyvox
-pip install -e .
-```
-
-## 2) Data preparation 
-
-If you want to rebuild TinyVox from scratch, you can followed these steps.
-
-1. Download all audio files and transcript files from [PhonBank](https://phon.talkbank.org/), following the same structure. 
-
-You can use our helper script (which should hopefully work if nothing has changed on the PhonBank side):
-
-```sh
-python data_preparation/talkbank_audio_scrapper.py mail password database
-```
-
-where mail and password should be your email address and password associated to your TalkBank account and database should belong to [homebank, childes, or phon] (phon in our case).
-
-Note that this script will download everything, keeping the same structure as the original structured used in PhonBank. 
-
-Script last tested: January 20th, 2026
-
-2. Unzip and keep .zip files as we'll need them for step 3.
-
-To unzip you can use this bash command:
-```shell
-find /path/to/data -name "*.zip" -type f -execdir unzip -o {} \;
-```
-
-```shell
-├── childes
-│   ├── Biling
-│   │   ├── Amsterdam
-│   │   │   ├── Annick
-│   │   │   │   ├── fra
-│   │   │   │   └── nld
-│   │   │   ├── Anouk
-│   │   │   │   ├── fra
-│   │   │   │   └── nld
-...
-└── phon
-    ├── Biling
-    │   ├── Almeida
-    │   │   ├── fra
-    │   │   └── por
-    │   ├── ChildL2
-    │   │   └── 0wav
-```
-
-3. Remove .mp3 for which there's already a .wav and convert everything to single-channel 16 kHz. Don't forget to change the data path in the two scripts above. 
-
-```shell
-python data_preparation/convert_audio.py /path/to/downloaded_corpora
-```
-
-where the provided path corresponds to where the data have been downloaded in step 1.
-
-4. List pairs of (audio, transcript) while checking that the audio can be loaded and trying to filter out 1) automatic transcripts, 2) transcripts with >2% utterances with missing timestamps. 
-This will create a .csv file in `data_logs/original_pairs.csv` with the created pairs.
-
-```shell
-python data_preparation/create_pairs.py --data_path /path/to/downloaded_corpora --required_tiers pho xpho
-```
-
-5. You can run `analysis/data_quantity.ipynb` to extract phonetically-transcribed utterances of the target child into the `phonetically_transcribed_pairs/utterances.csv` file.
-
-6. To map the input phonetic inventory to the target inventory (`ipa/mapping.py`) and remove empty utterances, you can use: 
-
-```shell
-python data_preparation/simplify_phones.py --data phonetically_transcribed_pairs/utterances.csv
-```
-
-This will create a file `phonetically_transcribed_pairs/utterances2.csv`
-
-7. Extract KCHI segments into individual files using:
-
-```shell
-python data_preparation/extract_segments.py --data phonetically_transcribed_pairs/utterances2.csv --out /path/to/TinyVox
-```
-
-8. Create phonetic vocabulary:
-
-```shell
-python data_preparation/create_inventory.py --path /path/to/TinyVox
-```
-
-9. Copy original audio files to tinyvox:
-
-```shell
-python data_preparation/copy_original_files.py --data TinyVox
-```
+| Folder / file | What it is                                                                                                                                                                                                                                                         |
+|---|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `audio/` | Child speech utterances (`.wav`), extracted from manually-annotated boundaries, listen to these to get a feel for the data                                                                                                                                         |
+| `original/` | Raw audio downloaded from TalkBank. **Not included** in the TinyVox `.zip` (179 GB), needed only if you want to retrain BabAR or use contextual information as in the paper. [Download separately here](https://cognitive-ml.fr/downloads/tinyVox.original.tar.gz) |
+| `metadata.csv` | Per-utterance metadata (see below)                                                                                                                                                                                                                                 |
+| `train.csv` / `val.csv` / `test.csv` | Same metadata, split the way we split it to train BabAR                                                                                                                                                                                                            |
+ 
+**`metadata.csv` columns:**
+ 
+| Column | Description |
+|---|---|
+| `audio_filename` | Name of the `.wav` file in `audio/` |
+| `original_audio_path` | Path to the source audio file, if you want to re-download it |
+| `original_transcript_path` | Path to the source `.cha` transcript, if you want to re-download it |
+| `language` | Language spoken by the child |
+| `gender` | Gender of the child |
+| `file_activity` | Type of recorded activity (e.g. toyplay, picture naming) |
+| `age_months` | Child's age in months |
+| `phones` | Manual phonetic transcription (after normalization) |
+| `sentence` | Orthographic transcript, where available (not used in the paper) |
+| `child_pseudoid` | Pseudo-anonymized child identifier, inferred from metadata |
+| `onset` / `offset` | Utterance boundaries (ms) in the original file, for re-extraction |
+ 
+See [REBUILDING.md](REBUILDING.md) for instructions on rebuilding TinyVox from scratch.
 
 ## References
 
