@@ -27,12 +27,12 @@ TinyVox can be downloaded here: [https://talkbank.org/phon/access/Derived/TinyVo
 └── test.csv
 ```
 
-| Folder / file | What it is                                                                                                                                                                                                                                                         |
-|---|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `audio/` | Child speech utterances (`.wav`), extracted from manually-annotated boundaries, listen to these to get a feel for the data                                                                                                                                         |
-| `original/` | Raw audio downloaded from TalkBank. **Not included** in the TinyVox `.zip` (179 GB), needed only if you want to retrain BabAR or use contextual information as in the paper. [Download separately here](https://cognitive-ml.fr/downloads/tinyVox.original.tar.gz) |
-| `metadata.csv` | Per-utterance metadata (see below)                                                                                                                                                                                                                                 |
-| `train.csv` / `val.csv` / `test.csv` | Same metadata, split the way we split it to train BabAR                                                                                                                                                                                                            |
+| Folder / file | What it is                                                                                                                                                                                                                                             |
+|---|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `audio/` | Child speech utterances (`.wav`), extracted from manually-annotated boundaries, listen to these to get a feel for the data                                                                                                                             |
+| `original/` | Raw audio downloaded from TalkBank. **Not included** in the TinyVox `.zip` (179 GB), needed only if you want to retrain BabAR or use contextual information as in the paper. You can download it using `./download_original.sh` provided in this repo. |
+| `metadata.csv` | Per-utterance metadata (see below)                                                                                                                                                                                                                     |
+| `train.csv` / `val.csv` / `test.csv` | Same metadata, split the way we split it to train BabAR                                                                                                                                                                                                |
  
 **`metadata.csv` columns:**
  
