@@ -7,7 +7,7 @@ set -euo pipefail
 
 BASE_URL="https://cognitive-ml.fr/downloads/tinyVox"
 FILENAME="tinyVox.original.tar.gz"
-OUTPUT_DIR="./tinyVox"
+OUTPUT_DIR="./tinyvox"
 PART_COUNT=6
 EXPECTED_MD5="ebde0b7933c602426c19b210c1ada4d7"
 
