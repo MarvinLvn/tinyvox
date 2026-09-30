@@ -10,7 +10,7 @@ In practice, this means:
 - TinyVox can be used for academic research, teaching, and non-commercial development.
 - TinyVox **cannot** be used in commercial products or services. This includes training or fine-tuning models (e.g. LLMs, ASR systems) that will be deployed commercially.
 - Any redistribution or adaptation of TinyVox must remain under the same license (ShareAlike) and retain attribution.
-- If you use any of TinyVox in your research, you should also cite the original corpora as per the TalkBank's [citation rules](https://talkbank.org/0share/rules.html). 
+- If you use any of TinyVox in your research, you should also cite the original corpora as per the TalkBank's [citation rules](https://talkbank.org/0share/rules.html](https://talkbank.org/0share/citation.html). 
 
  
 ---
