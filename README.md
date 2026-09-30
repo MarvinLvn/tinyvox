@@ -4,12 +4,13 @@ TinyVox is a large-scale, cross-linguistic corpus of over half a million IPA-tra
 
 ## License and usage restrictions
  
-TinyVox is derived from data hosted on [PhonBank](https://talkbank.org/phon/), part of the TalkBank system. It is therefore subject to TalkBank's [Ground Rules](https://talkbank.org/0share/rules.html) and distributed under **[CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/)**.
+TinyVox is derived from data hosted on [PhonBank](https://talkbank.org/phon/), part of the TalkBank system. It is therefore subject to TalkBank's [Ground Rules](https://talkbank.org/0share/rules.html) and distributed under **[CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/)**. 
  
 In practice, this means:
 - TinyVox can be used for academic research, teaching, and non-commercial development.
 - TinyVox **cannot** be used in commercial products or services. This includes training or fine-tuning models (e.g. LLMs, ASR systems) that will be deployed commercially.
 - Any redistribution or adaptation of TinyVox must remain under the same license (ShareAlike) and retain attribution.
+- If you use any of TinyVox in your research, you should also cite the original corpora as per the TalkBank's ground rules. 
 
  
 ---
