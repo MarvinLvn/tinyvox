@@ -56,13 +56,13 @@ See [REBUILDING.md](REBUILDING.md) for instructions on rebuilding TinyVox from s
 ## References
 
 ```bibtex
-@misc{babar,
-      title={BabAR: from phoneme recognition to developmental measures of young children's speech production}, 
-      author={Marvin Lavechin and Elika Bergelson and Roger Levy},
-      year={2026},
-      eprint={2603.05213},
-      archivePrefix={arXiv},
-      primaryClass={eess.AS},
-      url={https://arxiv.org/abs/2603.05213}, 
+@inproceedings{lavechin26_interspeech,
+  title     = {{BabAR: from phoneme recognition to developmental measures of young children's speech production}},
+  author    = {Marvin Lavechin and Elika Bergelson and Roger Levy},
+  year      = {2026},
+  booktitle = {{Interspeech 2026 [Long Track]}},
+  pages     = {4354--4363},
+  doi       = {10.21437/Interspeech.2026-1132},
+  issn      = {2958-1796},
 }
 ```
